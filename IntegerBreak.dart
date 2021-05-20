@@ -2,9 +2,10 @@
 integer lengths. Return the maximum product you can get from multiplying the smaller lengths*/
 
 main() {
-  int n = 15;
-  print("lunghezza corda iniziale: $n");
-  print("Prodotto massimo: ${f(n)}");
+  for (int i = 2; i < 20; i++) {
+    print("lunghezza corda iniziale: $i");
+    print("Prodotto massimo: ${f(i)}");
+  }
 }
 
 int max = 0;
@@ -28,7 +29,7 @@ void m(List<int> c1, int multAtt) {
       max = multAtto * k1.length;
     }
 
-    if (k1.length == 2) {
+    if (k1.length == 1) {
       return;
     }
 
