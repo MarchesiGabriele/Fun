@@ -1,4 +1,4 @@
-# Longest Substring Without Repeating Characters.py
+# Longest Substring Without Repeating Characters
 
 
 def main():

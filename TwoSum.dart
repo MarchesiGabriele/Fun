@@ -18,7 +18,6 @@ main(List<String> args) {
 //Easy Way
 List<int> f(List<int> list, int tg) {
   List<int> newList = List.from(list);
-
   for (;;) {
     if (newList.contains(tg - newList[0])) {
       return [list.indexOf(newList[0]), list.indexOf(tg - newList[0])];
