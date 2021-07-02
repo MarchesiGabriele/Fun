@@ -4,10 +4,6 @@ def main():
     print(findMedianSortedArrays(lista1, lista2))
 
 
-# [1,7]
-# [4,5,6]
-
-
 def findMedianSortedArrays(nums1, nums2):
     nums = []
     index1 = 0
