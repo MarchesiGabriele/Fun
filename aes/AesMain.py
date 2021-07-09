@@ -7,7 +7,7 @@ import sbox as sb
 
 # TODO: capire come calcolare da solo la sbox (pag 22 lecture 8)
 
-# TODO: eseguire la rotazione dei bit usando lo shift dei bit verso sinistra
+# TODO: eseguire la rotazione dei bit usando lo shift bitwise dei bit verso sinistra
 
 
 # procedura: creo key schedule da 44 word partendo dalla chiave originale, le prime 4 le uso per il primo passaggio. Il primo passaggio
@@ -15,7 +15,8 @@ import sbox as sb
 # Ognuno dei round esegue:
 # Sostituzione byte: sostituisco byte dello state con dei byte corrispondenti presi dalla sbox in base a bit dello state
 # Shift Byte: prima riga rimane uguale, secoda shifto a destra di un byte, terza riga shifto a sinistra di due byte e la terza di 3 byte
-# Mix Colonne:
+# Mix Colonne: each byte in a column is replaced by two times that byte, plus three times the the next byte, plus the byte that
+# comes next, plus the byte that follows
 # Add roundKey: aggiunla roundkey all'outputstate calcolato nel round precedente
 # NB: nell'ultimo round non eseguo lo step "mix colonne" !!
 
@@ -62,7 +63,6 @@ def main():
         sboxMat.append([])
         for column in range(16):
             sboxMat[row].append(hex(sb.sbox[row * 16 + column]))
-    print(sboxMat)
 
     # SOSTITUZIONE BYTE
     for row in range(4):
@@ -76,14 +76,11 @@ def main():
             firstHalf = int(firstHalf, 2)
             lastHalf = int(lastHalf, 2)
 
-            # print(firstHalf)
-            # print(lastHalf)
-
             # Sostituzione valori nello stato
             state[row][column] = sboxMat[firstHalf][lastHalf]
 
+    print("\n SubValues: \n")
     print(np.matrix(state))
-    print("\n \n")
 
     # ROW BYTE SHIFT
     # seconda riga
@@ -112,8 +109,34 @@ def main():
         else:
             state[3][3 - i] = state[3][2 - i]
 
+    print("\n ShiftRows: \n")
     print(np.matrix(state))
-    print("\n \n")
+
+    # MIX COLUMNS
+
+    # matrice da moltiplicare a quella dello stato
+    mixMat = [[2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2]]
+
+    # matMul
+    newState = state
+    for row in range(4):
+        for column in range(4):
+            result = ""
+            for index in range(4):
+                if result == "":
+                    result = int(str(mixMat[row][index]), base=16) & int(
+                        str(state[index][column]), base=16
+                    )
+                else:
+                    result = result ^ (
+                        int(str(mixMat[row][index]), base=16)
+                        & int(str(state[index][column]), base=16)
+                    )
+
+            newState[row][column] = hex(result)
+
+    print("\n MixColumns: \n")
+    print(np.matrix(newState))
 
 
 if __name__ == "__main__":
